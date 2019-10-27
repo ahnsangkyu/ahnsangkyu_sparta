@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+	<link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
+
+	<Title>Hello</Title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<style type="text/css">
+* {
+			font-family: 'Stylish', sans-serif;
+		}
+		.wrap {
+			width: 900px;
+			margin:auto;
+		}
+		.jumbotron {
+			width: 900px;
+			margin: 000px auto;
+		}
+
+		.formgroup {
+			width: 100px;
+			margin: 100px auto;
+			padding: 100px
+		}
+		.card {
+			width: 100px;
+			margin: 100px auto;
+
+		}
+		.carddeck {
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+		.card-footer {color:blue;
+			font-weight: bold;}
+			.small-text-muted {
+				color:blue;
+			font-weight: bold;
+			}
+		.posting-box {
+				max-width: 500px;
+			padding: 2rem;
+			margin: 2rem auto;
+			border-color: #e9ecef;
+			border-radius: 0.3rem;
+			border: solid;
+			display: none;
+		}
+
+	</style>
+	
+
+	<script type="text/javascript">
+
+		let num = 0;
+		function posting(){
+			let url = $('#article-url').val();
+			let comment = $('#comment').val();
+			let author = '상규';
+
+			console.log(url);
+			console.log(comment);
+
+			$.ajax({
+ 			type: "POST",
+  			url: "http://spartacodingclub.shop/post",
+  			data: { url_give:url, comment_give:comment, author_give:author },
+  			success: function(response){
+  			if (response['result']=='success'){
+			alert('저장완료!');
+  		} else {
+  			alert('서버오류!')
+  		}
+ 	 	}
+		})
+		}
+
+		$(document).ready(function(){listing();});
+		function listing() {
+				$.ajax({
+				  type: "GET",
+				  url: "http://spartacodingclub.shop/post?author_give=상규",
+				  data: {},
+				  success: function(response){
+	  				 if (response['result'] == 'success') {
+						 let articles = response['articles'];
+						for (let i = 0; i < articles.length; i++) {
+							make_card(articles[i]['comment'],articles[i]['desc'],articles[i]['image'],articles[i]['title'],articles[i]['url'])
+														 }
+								 } else {
+								 alert('기사를 받아오지 못했습니다');
+								 }
+ 								 }
+								})
+
+				function make_card(comment, desc, image, title, url) {
+				  let temp_html = '<div class="card">\
+				    <img class="card-img-top" src="'+image+'" alt="Card image cap">\
+				    <div class="card-body">\
+				      <a href="'+url+'" target="_blank" class="card-title">'+title+'</a>\
+				      <p class="card-text">'+desc+'</p>\
+				      <p class="card-text comment">'+comment+'</p>\
+				    </div>\
+				  </div>';
+				  $('#cards-box').append(temp_html);
+				}
+
+
+
+		function togglePostingBox() {
+		if  ($('#posting-box').css('display')=='block'){
+			$('#posting-box').hide();
+			$('#btn-posting-box').text('포스팅 박스 열기')
+		} else {
+			$('#posting-box').show();
+			$('#btn-posting-box').text('포스팅 박스 닫기')
+		}}
+	</script>
+</head>
+
+<body>
+
+<div class="wrap">
+	<div class="jumbotron">
+  <h1 class="display-4">나홀로 링크 메모장</h1>
+  <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다.</p>
+  <hr class="my-4">
+  <p>가즈아.</p>
+  <a class="btn btn-primary btn-lg" id="btn-posting-box" href="#" role="button" onclick=togglePostingBox()>포스팅박스 열기</a>
+</div>
+ 
+
+<form class='posting-box' id="posting-box" class="form-post">
+  <div class="form-group">
+    <label for="exampleFormControlInput1">아티클 url</label>
+    <input type="text" id="article-url" class="form-control" placeholder="">
+  </div>
+ 
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">의견</label>
+ 
+    <textarea class="form-control" id="comment" rows="3"></textarea>
+  </div>
+  <button onclick="posting()" type = "button" class="btn btn-primary">기사저장</button>
+</form>
+
+
+
+<div class="card-deck">
+  <div class="card">
+    <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+      <a class="card-title">여기 기사 제목</a>
+      <p class="card-text">내용이 들어가는 곳.</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">코멘트들가는곳</small>
+    </div>
+  </div>
+  <div class="card">
+    <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+          <a class="card-title">여기 기사 제목</a>
+      <p class="card-text">내용이 들어가는 곳.</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">코멘트들가는곳</small>
+    </div>
+  </div>
+  <div class="card">
+    <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+         <a class="card-title">여기 기사 제목</a>
+      <p class="card-text">내용이 들어가는 곳.</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">코멘트들가는곳</small>
+    </div>
+  </div>
+</div><div class="card-deck">
+  <div class="card">
+    <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+          <a class="card-title">여기 기사 제목</a>
+      <p class="card-text">내용이 들어가는 곳.</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">코멘트들가는곳</small>
+    </div>
+  </div>
+  <div class="card">
+    <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+         <a class="card-title">여기 기사 제목</a>
+      <p class="card-text">내용이 들어가는 곳.</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">코멘트들가는곳</small>
+    </div>
+  </div>
+  <div class="card">
+    <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+          <a class="card-title">여기 기사 제목</a>
+      <p class="card-text">내용이 들어가는 곳.</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">코멘트들가는곳</small>
+    </div>
+  </div>
+</div>
+
+</body>
