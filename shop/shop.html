@@ -1,38 +1,127 @@
 <!doctype html>
 <html lang="en">
-
+<!--구글폰트-->
 <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
 
 <head>
+	<!--타이틀 이름-->
 	<title>shopping</title>
 	<meta charset="utf-8">
+	<!--Bootstrap CSS-->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<style> type="text/css"
-* {
-font-family: 'Stylish', sans-serif;
-}
-.titl {
-	width: 900px;
-			margin:auto;
-}
-.imag {
-		width: 900px;
-			margin:auto;
-}
+<!--JS-->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+	
+	function order() {
+		let name = $('order_name').val();
+		let count = $('#order_count').val();
+        let address = $('#order_address').val();
+        let phone = $('#order_phone').val();
+        let item = '코트';
+
+        $.ajax({
+          type: "POST",
+          url: "http://spartacodingclub.shop/order",
+          data: { name_give:name, count_give:count, address_give:address, phone_give:phone, item_give:item },
+          success: function(response){
+            if(response['result'] == 'success'){
+              alert('주문 완료!');
+              window.location.reload();
+            }else{
+            	alert('주문 오류!');
+            }
+          	}
+       		 })
+    		  }
+
+      $(document).ready(function(){
+        $('#orders-box').html('');
+        listing();
+      });
+
+      function listing() {
+      	let item = '코트';
+        $.ajax({
+          type: "GET",
+          url: "http://spartacodingclub.shop/order?item_give=코트",
+          data: {},
+          success: function(response){
+             if (response['result'] == 'success') {
+               let orders = response['orders'];
+               console.log(orders)
+               for (let i = 0; i < orders.length; i++) {
+                 make_card(orders[i]['item'],orders[i]['name'],orders[i]['count'],orders[i]['address'],orders[i]['phone'])
+               }
+             } else {
+               alert('주문 오류!');
+             }
+          }
+        })
+      }
+
+      function make_card(item,name,count,address,phone) {
+        let temp_html = '<tr>\
+            <td>'+item+'</td>\
+            <td>'+name+'</td>\
+            <td>'+count+'</td>\
+            <td>'+address+'</td>\
+            <td>'+phone+'</td>\
+          </tr>';
+        $('#orders-box').append(temp_html);
+      }
+</script>
+
+<style type="text/css">
+	* {
+	font-family: 'Stylish', sans-serif;
+	}
+	.titl {
+	width: 700px;
+	margin:auto;
+	}
+	.imag {
+	width: 500px;
+	height: 500px;
+	margin:auto;
+	background-size : cover;
+	background-position: center;
+	}
+	.card {
+	width: 700px;
+	margin:auto;
+	margin-top: 20px
+	;
+	}
+	.form-group {
+	width: 700px;
+	margin:auto;
+	padding-top: 20px;
+	}
+	.btn-lg {
+	margin: 0px 700px 0 700px;
+	margin-top: 20px;
+	width:auto;
+	}
+	.orders {
+	width: 700px;
+	margin:auto;
+	padding-top: 20px;
+	}
 </style>
 </head>
 <body>
-<h1 class = "titl"> 쇼핑몰 
 	<div class = "imag">
-<img src="https://seoul-p-studio.bunjang.net/product/90114783_1_1542290289_w640.jpg" class="img-fluid" alt="Responsive image">
-<div>
+	<img src="https://seoul-p-studio.bunjang.net/product/90114783_1_1542290289_w640.jpg" class="imag" alt="Responsive image">
+	</div>
 	<div class="card">
-  <div class="card-header">
-    남성의류
+ 	<div class="card-header">
+    여성의류
   </div>
   <div class="card-body">
     <blockquote class="blockquote mb-0">
       <p>겨울에 입을 수 있는 코트</p>
+      	<h6> 가격 : 50000원 </h6>
+      	<h6> size : Free </h6>
     </blockquote>
   </div>
 </div>
@@ -40,16 +129,6 @@ font-family: 'Stylish', sans-serif;
   <div class="form-group">
     <label for="exampleFormControlInput1">주문자 성함</label>
     <input type="email" class="form-control" id="exampleFormControlInput1">
-  </div>
-  <div class="form-group">
-    <label for="exampleFormControlSelect1">주소</label>
-    <select class="form-control" id="exampleFormControlSelect1">
-      <option>1</option>
-      <option>2</option>
-      <option>3</option>
-      <option>4</option>
-      <option>5</option>
-    </select>
   </div>
   <div class="form-group">
     <label for="exampleFormControlSelect2">수량</label>
@@ -61,14 +140,29 @@ font-family: 'Stylish', sans-serif;
       <option>5</option>
     </select>
   </div>
-  <div class="form-group">
-    <label for="exampleFormControlTextarea1">전화번호</label>
-    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    <div class="form-group">
+    <label for="exampleFormControlSelect1">주소</label>
+    <input type="email" class="form-control" id="exampleFormControlInput1">
+  </div>  <div class="form-group">
+    <label for="exampleFormControlSelect1">전화번호</label>
+    <input type="email" class="form-control" id="exampleFormControlInput1">
   </div>
+  <button onclick="order()" type="button" class="btn-lg">주문하기</button>
 </form>
-<button type="button" class="btn btn-secondary btn-lg">주문하기</button>
-
-
-
+	<div class="orders">
+		<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">상품명</th>
+      <th scope="col">성함</th>
+      <th scope="col">수량</th>
+      <th scope="col">주소</th>
+      <th scope="col">주문하기</th>
+    </tr>
+  </thead>
+  <tbody id="orders-box">
+  </tbody>
+</table>
+	</div>
 	</body>
 	</html>
